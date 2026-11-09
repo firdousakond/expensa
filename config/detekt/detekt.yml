@@ -335,6 +335,8 @@ naming:
     excludes: ['**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/androidUnitTest/**', '**/androidInstrumentedTest/**', '**/jsTest/**', '**/iosTest/**']
     functionPattern: '[a-z][a-zA-Z0-9]*'
     excludeClassPattern: '$^'
+    # Compose @Composable functions are intentionally PascalCase.
+    ignoreAnnotated: ['Composable', 'Preview']
   FunctionParameterNaming:
     active: true
     parameterPattern: '[a-z][A-Za-z0-9]*'
@@ -792,6 +794,7 @@ style:
     active: true
     ignoreLateinitVar: false
   WildcardImport:
-    active: true
+    # Compose and Ktor APIs are designed around on-demand (wildcard) imports.
+    active: false
     excludeImports:
       - 'java.util.*'

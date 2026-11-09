@@ -11,10 +11,12 @@ androidx-lifecycle = "2.11.0"
 androidx-testExt = "1.3.0"
 androidx-testRunner = "1.7.0"
 composeMultiplatform = "1.12.2"
+detekt = "1.23.8"
 junit = "4.13.2"
 kotlin = "2.4.21"
 kotlin-wrappers = "2026.10.4"
 kotlinx-coroutines = "1.11.0"
+ktlint = "14.2.0"
 ktor = "3.6.0"
 logback = "1.6.6"
 material3 = "1.12.0-alpha03"
@@ -53,3 +55,5 @@ composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "k
 kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 ktor = { id = "io.ktor.plugin", version.ref = "ktor" }
+ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
