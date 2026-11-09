@@ -14,12 +14,12 @@ composeMultiplatform = "1.12.2"
 detekt = "1.23.8"
 junit = "4.13.2"
 kotlin = "2.4.21"
-kotlin-wrappers = "2026.10.4"
+kotlin-wrappers = "2026.11.0"
 kotlinx-coroutines = "1.11.0"
 ktlint = "14.2.0"
-ktor = "3.6.0"
+ktor = "3.6.1"
 logback = "1.6.6"
-material3 = "1.12.0-alpha03"
+material3 = "1.13.0-beta02"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
