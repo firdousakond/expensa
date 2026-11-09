@@ -1,0 +1,33 @@
+name: Chore
+description: Maintenance, tooling, refactor, or infrastructure work
+title: "chore: "
+labels: ["chore"]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What needs doing?
+      description: Describe the maintenance or infrastructure task.
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why
+      description: What's the benefit? What breaks or degrades if we don't?
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - core (domain / shared logic)
+        - shared (UI / viewmodels)
+        - androidApp
+        - iosApp
+        - backend
+        - ci / tooling
+        - docs
+    validations:
+      required: true
