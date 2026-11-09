@@ -1,0 +1,51 @@
+name: iOS Build
+
+# Runs only when shared/iOS/core code changes — macOS runners are expensive
+# (free on public repos, but still slow), so we don't run this on every PR.
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'app/shared/**'
+      - 'app/iosApp/**'
+      - 'core/**'
+      - 'gradle/**'
+      - '**/*.gradle.kts'
+      - 'gradle.properties'
+
+concurrency:
+  group: ios-build-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  ios:
+    name: Shared framework & iOS tests
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Build shared framework for iOS simulator
+        run: ./gradlew :app:shared:linkDebugFrameworkIosSimulatorArm64
+      - name: Run shared tests on iOS simulator
+        run: ./gradlew :app:shared:iosSimulatorArm64Test
+      - name: Build iOS app (simulator, unsigned)
+        run: >
+          xcodebuild build
+          -project app/iosApp/iosApp.xcodeproj
+          -scheme iosApp
+          -destination 'generic/platform=iOS Simulator'
+          CODE_SIGNING_ALLOWED=NO
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-test-reports
+          path: '**/build/reports/tests/'
+          if-no-files-found: ignore

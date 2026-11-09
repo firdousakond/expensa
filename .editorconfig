@@ -8,7 +8,13 @@ trim_trailing_whitespace = true
 indent_style = space
 indent_size = 4
 
-
+[*.{kt,kts}]
+# Compose @Composable functions are intentionally PascalCase; don't flag them.
+ktlint_function_naming_ignore_when_annotated_with = Composable, Preview
+# Compose and Ktor APIs are designed around on-demand (wildcard) imports.
+ktlint_standard_no-wildcard-imports = disabled
+# KMP entry-point files are named main.kt by convention.
+ktlint_standard_filename = disabled
 
 # iOS interop: MainViewController() is a Swift-facing factory, so it is PascalCase.
 [**/iosMain/**/*.kt]
