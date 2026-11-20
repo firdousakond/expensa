@@ -32,3 +32,13 @@ fun validateExpense(
         }
     return if (errors.isEmpty()) ValidationResult.Valid else ValidationResult.Invalid(errors)
 }
+
+fun validateTrip(trip: Trip): ValidationResult {
+    val errors =
+        buildList {
+            if (trip.endDate < trip.startDate) {
+                add(ValidationError.EndDateBeforeStart)
+            }
+        }
+    return if (errors.isEmpty()) ValidationResult.Valid else ValidationResult.Invalid(errors)
+}

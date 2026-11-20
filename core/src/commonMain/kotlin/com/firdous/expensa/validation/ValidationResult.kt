@@ -14,6 +14,8 @@ sealed interface ValidationResult {
 sealed interface ValidationError {
     data object AmountNotPositive : ValidationError
 
+    data object EndDateBeforeStart : ValidationError
+
     data class CurrencyMismatch(
         val expected: Currency,
         val actual: Currency,
