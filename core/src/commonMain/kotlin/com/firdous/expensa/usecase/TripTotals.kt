@@ -26,3 +26,8 @@ fun perCategoryBreakdown(
                 .map { it.amount }
                 .fold(Money.zero(trip.currency)) { acc, money -> acc + money }
         }
+
+fun budgetRemaining(
+    trip: Trip,
+    expenses: List<Expense>,
+): Money = trip.budget - tripTotal(trip, expenses)

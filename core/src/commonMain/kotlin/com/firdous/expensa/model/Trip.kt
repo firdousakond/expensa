@@ -8,5 +8,5 @@ data class Trip(
     val startDate: LocalDate,
     val endDate: LocalDate,
     val currency: Currency,
-    val money: Money,
+    val budget: Money,
 )

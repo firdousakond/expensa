@@ -51,7 +51,7 @@ class PerCategoryBreakdownTest {
         startDate = LocalDate(2026, 1, 1),
         endDate = LocalDate(2026, 1, 7),
         currency = currency,
-        money = Money(0, currency),
+        budget = Money(0, currency),
     )
 
     private fun expense(
