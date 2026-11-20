@@ -4,6 +4,18 @@ Project rules for AI coding agents (and humans) working in Expensa. Read this
 before making changes. When the AI gets something wrong, fix the code **and**
 add a rule here so it doesn't recur.
 
+## Working mode (read first)
+
+- **Do not write or edit application/source code unless the developer explicitly
+  asks you to.** The default is to guide: explain, show snippets for reference,
+  review, and advise — the developer writes the code themselves.
+- Explicit means a direct instruction like "write it", "implement this", "make
+  the change", "fix it for me". A question ("how do I...", "show me...", "why...")
+  is a request to explain, not to edit files.
+- Configuration/tooling files (build scripts, CI, Gradle catalog, docs) may be
+  edited when the task is clearly about that setup, but when in doubt, ask first.
+- Never edit source files that are not part of the explicitly requested task.
+
 ## What Expensa is
 
 An offline-first travel & expense app on Kotlin Multiplatform. All business
