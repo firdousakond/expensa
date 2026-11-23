@@ -1,5 +1,5 @@
 [versions]
-agp = "9.5.1"
+agp = "9.5.2"
 android-compileSdk = "37"
 android-minSdk = "28"
 android-targetSdk = "37"
@@ -14,15 +14,15 @@ composeMultiplatform = "1.12.2"
 detekt = "1.23.8"
 junit = "4.13.2"
 kotlin = "2.4.21"
-kotlin-wrappers = "2026.10.4"
+kotlin-wrappers = "2026.11.2"
 kotlinx-coroutines = "1.11.0"
-turbine = "1.2.0"
-kotlinx-datetime = "0.6.2"
+turbine = "1.2.1"
+kotlinx-datetime = "0.8.0"
 kover = "0.9.11"
 ktlint = "14.2.0"
-ktor = "3.6.0"
-logback = "1.6.6"
-material3 = "1.12.0-alpha03"
+ktor = "3.6.1"
+logback = "1.6.8"
+material3 = "1.13.0-rc01"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
