@@ -14,12 +14,12 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
-class ObserveTripSummaryTest {
+class ObserveTripDetailTest {
     private val eur = Currency("EUR")
     private val berlinId = TripId("berlin")
 
     @Test
-    fun `emits summary with total, per-category and remaining`() =
+    fun `emits expenses and a consistent summary`() =
         runTest {
             val trips = FakeTripRepository()
             val expenses = FakeExpenseRepository()
@@ -27,30 +27,35 @@ class ObserveTripSummaryTest {
             expenses.upsert(expense("e1", CategoryId("food"), Money(1250, eur)))
             expenses.upsert(expense("e2", CategoryId("transport"), Money(900, eur)))
 
-            val observeTripSummary = ObserveTripSummary(trips, expenses)
+            val observeTripDetail = ObserveTripDetail(trips, expenses)
 
-            observeTripSummary(berlinId).test {
-                val summary = awaitItem()
-                assertEquals(Money(2150, eur), summary?.total)
-                assertEquals(Money(1250, eur), summary?.perCategory?.get(CategoryId("food")))
-                assertEquals(Money(900, eur), summary?.perCategory?.get(CategoryId("transport")))
-                assertEquals(Money(47850, eur), summary?.remaining) // 50000 - 2150
+            observeTripDetail(berlinId).test {
+                val detail = awaitItem()
+                assertEquals(2, detail?.expenses?.size)
+                assertEquals(Money(2150, eur), detail?.summary?.total)
+                assertEquals(Money(47850, eur), detail?.summary?.remaining)
                 cancelAndIgnoreRemainingEvents()
             }
         }
 
     @Test
-    fun `updates when an expense is added`() =
+    fun `list and summary update together when an expense is added`() =
         runTest {
             val trips = FakeTripRepository()
             val expenses = FakeExpenseRepository()
             trips.upsert(trip())
-            val observeTripSummary = ObserveTripSummary(trips, expenses)
+            val observeTripDetail = ObserveTripDetail(trips, expenses)
 
-            observeTripSummary(berlinId).test {
-                assertEquals(Money(0, eur), awaitItem()?.total) // no expenses yet
+            observeTripDetail(berlinId).test {
+                val initial = awaitItem()
+                assertEquals(0, initial?.expenses?.size)
+                assertEquals(Money(0, eur), initial?.summary?.total)
+
                 expenses.upsert(expense("e1", CategoryId("food"), Money(1250, eur)))
-                assertEquals(Money(1250, eur), awaitItem()?.total)
+
+                val updated = awaitItem()
+                assertEquals(1, updated?.expenses?.size)
+                assertEquals(Money(1250, eur), updated?.summary?.total) // consistent in one emission
                 cancelAndIgnoreRemainingEvents()
             }
         }
@@ -58,9 +63,9 @@ class ObserveTripSummaryTest {
     @Test
     fun `emits null when the trip does not exist`() =
         runTest {
-            val observeTripSummary = ObserveTripSummary(FakeTripRepository(), FakeExpenseRepository())
+            val observeTripDetail = ObserveTripDetail(FakeTripRepository(), FakeExpenseRepository())
 
-            observeTripSummary(berlinId).test {
+            observeTripDetail(berlinId).test {
                 assertNull(awaitItem())
                 cancelAndIgnoreRemainingEvents()
             }
