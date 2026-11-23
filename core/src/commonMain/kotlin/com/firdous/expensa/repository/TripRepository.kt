@@ -1,16 +1,15 @@
 package com.firdous.expensa.repository
 
-import com.firdous.expensa.model.Category
-import com.firdous.expensa.model.CategoryId
 import com.firdous.expensa.model.Trip
+import com.firdous.expensa.model.TripId
 import kotlinx.coroutines.flow.Flow
 
 interface TripRepository {
-    fun observeTrip(): Flow<List<Trip>>
+    fun observeTrips(): Flow<List<Trip>>
 
-    suspend fun getCategory(id: CategoryId): Category?
+    suspend fun getTrip(id: TripId): Trip?
 
-    suspend fun upsert(category: Category)
+    suspend fun upsert(trip: Trip)
 
-    suspend fun delete(id: CategoryId)
+    suspend fun delete(id: TripId)
 }

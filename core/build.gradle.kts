@@ -39,8 +39,11 @@ kotlin {
     }
     sourceSets {
         commonMain.dependencies {
-            implementation(libs.kotlinx.datetime)
-            implementation(libs.kotlinx.coroutinesCore)
+            // api (not implementation): LocalDate and Flow appear in :core's
+            // public API (model fields, repository return types), so consumers
+            // need these types on their compile classpath.
+            api(libs.kotlinx.datetime)
+            api(libs.kotlinx.coroutinesCore)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
