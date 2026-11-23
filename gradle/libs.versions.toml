@@ -18,6 +18,7 @@ kotlin-wrappers = "2026.10.4"
 kotlinx-coroutines = "1.11.0"
 turbine = "1.2.0"
 kotlinx-datetime = "0.6.2"
+kover = "0.9.11"
 ktlint = "14.2.0"
 ktor = "3.6.0"
 logback = "1.6.6"
@@ -63,3 +64,4 @@ kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref =
 ktor = { id = "io.ktor.plugin", version.ref = "ktor" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }

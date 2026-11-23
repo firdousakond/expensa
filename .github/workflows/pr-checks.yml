@@ -64,12 +64,16 @@ jobs:
           :app:shared:jvmTest
           :app:shared:testAndroidHostTest
           :server:test
-      - name: Upload test reports
+      - name: Verify coverage (Kover, 80% minimum)
+        run: ./gradlew koverXmlReport koverVerify
+      - name: Upload test & coverage reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: test-reports
-          path: '**/build/reports/tests/'
+          path: |
+            **/build/reports/tests/
+            build/reports/kover/
           if-no-files-found: ignore
 
   android-build:
