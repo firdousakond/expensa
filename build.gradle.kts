@@ -52,7 +52,13 @@ kover {
                     "com.firdous.expensa.Platform*",
                     "com.firdous.expensa.MainViewControllerKt",
                 )
-                packages("expensa.app.shared.generated.resources")
+                // UI composables and the composition root are verified by running
+                // the app / UI tests, not unit coverage.
+                packages(
+                    "expensa.app.shared.generated.resources",
+                    "com.firdous.expensa.ui",
+                    "com.firdous.expensa.di",
+                )
             }
         }
         verify {

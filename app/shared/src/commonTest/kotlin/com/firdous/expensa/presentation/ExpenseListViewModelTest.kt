@@ -33,6 +33,7 @@ class ExpenseListViewModelTest {
         Dispatchers.setMain(UnconfinedTestDispatcher())
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @AfterTest
     fun tearDown() {
         Dispatchers.resetMain()
