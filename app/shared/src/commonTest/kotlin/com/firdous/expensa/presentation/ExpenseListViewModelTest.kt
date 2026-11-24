@@ -1,6 +1,7 @@
 package com.firdous.expensa.presentation
 
 import app.cash.turbine.test
+import com.firdous.expensa.data.InMemoryCategoryRepository
 import com.firdous.expensa.data.InMemoryExpenseRepository
 import com.firdous.expensa.data.InMemoryTripRepository
 import com.firdous.expensa.model.CategoryId
@@ -11,7 +12,9 @@ import com.firdous.expensa.model.Money
 import com.firdous.expensa.model.Trip
 import com.firdous.expensa.model.TripId
 import com.firdous.expensa.usecase.AddExpense
+import com.firdous.expensa.usecase.ObserveCategories
 import com.firdous.expensa.usecase.ObserveTripDetail
+import com.firdous.expensa.validation.ValidationResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -23,6 +26,7 @@ import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertIs
 
 class ExpenseListViewModelTest {
     private val eur = Currency("EUR")
@@ -50,6 +54,7 @@ class ExpenseListViewModelTest {
                 ExpenseListViewModel(
                     trip = trip,
                     observeTripDetail = ObserveTripDetail(trips, expenses),
+                    observeCategories = ObserveCategories(InMemoryCategoryRepository()),
                     addExpense = AddExpense(expenses),
                 )
 
@@ -62,7 +67,7 @@ class ExpenseListViewModelTest {
         }
 
     @Test
-    fun `add persists a valid expense and uiState updates`() =
+    fun `submitExpense persists a valid expense and uiState updates`() =
         runTest {
             val trip = trip()
             val trips = InMemoryTripRepository().apply { upsert(trip) }
@@ -72,11 +77,19 @@ class ExpenseListViewModelTest {
                 ExpenseListViewModel(
                     trip = trip,
                     observeTripDetail = ObserveTripDetail(trips, expenses),
+                    observeCategories = ObserveCategories(InMemoryCategoryRepository()),
                     addExpense = AddExpense(expenses),
                 )
 
             vm.uiState.test {
-                vm.add(expense(Money(900, eur)))
+                val result =
+                    vm.submitExpense(
+                        amountMinor = 900,
+                        categoryId = CategoryId("food"),
+                        date = LocalDate(2026, 1, 3),
+                        note = null,
+                    )
+                assertEquals(ValidationResult.Valid, result)
                 // Skip initial emissions until the expense lands; list and summary
                 // are consistent within a single emission (single-source use case).
                 var updated = awaitItem()
@@ -85,6 +98,34 @@ class ExpenseListViewModelTest {
                 }
                 assertEquals(1, updated.expenses.size)
                 assertEquals(Money(900, eur), updated.summary?.total)
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `submitExpense returns Invalid for a non-positive amount and does not persist`() =
+        runTest {
+            val trip = trip()
+            val trips = InMemoryTripRepository().apply { upsert(trip) }
+            val expenses = InMemoryExpenseRepository()
+
+            val vm =
+                ExpenseListViewModel(
+                    trip = trip,
+                    observeTripDetail = ObserveTripDetail(trips, expenses),
+                    observeCategories = ObserveCategories(InMemoryCategoryRepository()),
+                    addExpense = AddExpense(expenses),
+                )
+
+            vm.uiState.test {
+                val result =
+                    vm.submitExpense(
+                        amountMinor = 0,
+                        categoryId = CategoryId("food"),
+                        date = LocalDate(2026, 1, 3),
+                        note = null,
+                    )
+                assertIs<ValidationResult.Invalid>(result)
                 cancelAndIgnoreRemainingEvents()
             }
         }

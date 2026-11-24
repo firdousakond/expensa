@@ -11,6 +11,7 @@ import com.firdous.expensa.model.Trip
 import com.firdous.expensa.model.TripId
 import com.firdous.expensa.presentation.ExpenseListViewModel
 import com.firdous.expensa.usecase.AddExpense
+import com.firdous.expensa.usecase.ObserveCategories
 import com.firdous.expensa.usecase.ObserveTripDetail
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -44,10 +45,11 @@ class AppContainer {
         )
 
     private val observeTripDetail = ObserveTripDetail(trips, expenses)
+    private val observeCategories = ObserveCategories(categories)
     private val addExpense = AddExpense(expenses)
 
     val expenseListViewModel: ExpenseListViewModel by lazy {
-        ExpenseListViewModel(sampleTrip, observeTripDetail, addExpense)
+        ExpenseListViewModel(sampleTrip, observeTripDetail, observeCategories, addExpense)
     }
 
     init {
@@ -55,6 +57,7 @@ class AppContainer {
             trips.upsert(sampleTrip)
             categories.upsert(Category(CategoryId("food"), "Food", isBuiltIn = true))
             categories.upsert(Category(CategoryId("transport"), "Transport", isBuiltIn = true))
+            categories.upsert(Category(CategoryId("lodging"), "Lodging", isBuiltIn = true))
         }
     }
 }

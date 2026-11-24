@@ -23,29 +23,28 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.firdous.expensa.model.CategoryId
-import com.firdous.expensa.model.Currency
 import com.firdous.expensa.model.Expense
-import com.firdous.expensa.model.ExpenseId
-import com.firdous.expensa.model.Money
-import com.firdous.expensa.model.TripId
 import com.firdous.expensa.presentation.ExpenseListUiState
 import com.firdous.expensa.presentation.ExpenseListViewModel
-import kotlinx.datetime.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExpenseListScreen(viewModel: ExpenseListViewModel) {
     val state by viewModel.uiState.collectAsState()
-    var counter by remember { mutableStateOf(0) }
+    var showAddDialog by remember { mutableStateOf(false) }
+
+    if (showAddDialog) {
+        AddExpenseDialog(
+            viewModel = viewModel,
+            categories = state.categories,
+            onDismiss = { showAddDialog = false },
+        )
+    }
 
     Scaffold(
         topBar = { TopAppBar(title = { Text("Expenses") }) },
         floatingActionButton = {
-            FloatingActionButton(onClick = {
-                counter += 1
-                viewModel.add(sampleExpense(counter))
-            }) {
+            FloatingActionButton(onClick = { showAddDialog = true }) {
                 Text("+", style = MaterialTheme.typography.headlineMedium)
             }
         },
@@ -93,13 +92,3 @@ private fun ExpenseRow(expense: Expense) {
         }
     }
 }
-
-private fun sampleExpense(n: Int): Expense =
-    Expense(
-        id = ExpenseId("sample-$n"),
-        tripId = TripId("berlin-2026"),
-        amount = Money(500L * n, Currency("EUR")),
-        categoryId = CategoryId("food"),
-        date = LocalDate(2026, 1, 3),
-        note = null,
-    )
