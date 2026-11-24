@@ -25,8 +25,11 @@ import com.firdous.expensa.model.Category
 import com.firdous.expensa.presentation.ExpenseListViewModel
 import com.firdous.expensa.presentation.parseAmountToMinor
 import com.firdous.expensa.validation.ValidationResult
+import expensa.app.shared.generated.resources.Res
+import expensa.app.shared.generated.resources.error_invalid_expense
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
+import org.jetbrains.compose.resources.getString
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -99,7 +102,9 @@ fun AddExpenseDialog(
                             when (val result = viewModel.submitExpense(amountMinor, category, date, note)) {
                                 is ValidationResult.Valid -> onDismiss()
                                 is ValidationResult.Invalid ->
-                                    error = result.errors.firstOrNull()?.message() ?: "Invalid expense"
+                                    error =
+                                        result.errors.firstOrNull()?.message()
+                                            ?: getString(Res.string.error_invalid_expense)
                             }
                         }
                     }

@@ -1,0 +1,7 @@
+<resources>
+    <string name="error_amount_not_positive">Amount must be greater than zero</string>
+    <string name="error_end_date_before_start">End date cannot be before start date</string>
+    <string name="error_currency_mismatch">Currency must match the trip (%1$s)</string>
+    <string name="error_date_outside_trip">Date must be between %1$s and %2$s</string>
+    <string name="error_invalid_expense">Invalid expense</string>
+</resources>
