@@ -15,7 +15,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -24,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.firdous.expensa.model.Category
 import com.firdous.expensa.model.CategoryId
 import com.firdous.expensa.model.Currency
@@ -45,7 +45,7 @@ import org.jetbrains.compose.resources.stringResource
 /** Stateful entry point: binds the ViewModel to the stateless content. */
 @Composable
 fun ExpenseListScreen(viewModel: ExpenseListViewModel) {
-    val state by viewModel.uiState.collectAsState()
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
     var showAddDialog by remember { mutableStateOf(false) }
 
     if (showAddDialog) {
@@ -83,25 +83,25 @@ fun ExpenseListContent(
                     .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            SummaryHeader(state)
+            SummaryHeader(state.summary)
             LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                items(state.expenses) { expense -> ExpenseRow(expense) }
+                items(state.expenses, key = { it.id.value }) { expense -> ExpenseRow(expense) }
             }
         }
     }
 }
 
 @Composable
-private fun SummaryHeader(state: ExpenseListUiState) {
+private fun SummaryHeader(summary: TripSummary?) {
     val none = stringResource(Res.string.value_none)
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
-            text = stringResource(Res.string.summary_total, state.summary?.total?.format() ?: none),
+            text = stringResource(Res.string.summary_total, summary?.total?.format() ?: none),
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold,
         )
         Text(
-            text = stringResource(Res.string.summary_budget_left, state.summary?.remaining?.format() ?: none),
+            text = stringResource(Res.string.summary_budget_left, summary?.remaining?.format() ?: none),
             style = MaterialTheme.typography.bodyMedium,
         )
     }

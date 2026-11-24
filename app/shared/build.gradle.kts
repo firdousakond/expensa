@@ -8,6 +8,11 @@ plugins {
     alias(libs.plugins.composeCompiler)
 }
 
+composeCompiler {
+    // Treat our immutable domain/UI types as stable so composables can skip.
+    stabilityConfigurationFiles.add(rootProject.layout.projectDirectory.file("compose_stability.conf"))
+}
+
 kotlin {
     listOf(
         iosArm64(),
