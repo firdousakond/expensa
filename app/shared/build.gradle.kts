@@ -1,4 +1,3 @@
-import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -24,15 +23,6 @@ kotlin {
         }
     }
     jvm()
-    js {
-        browser()
-        binaries.executable()
-    }
-    @OptIn(ExperimentalWasmDsl::class)
-    wasmJs {
-        browser()
-        binaries.executable()
-    }
     android {
         namespace = "com.firdous.expensa.app.shared"
         compileSdk =
@@ -78,9 +68,6 @@ kotlin {
             implementation(libs.kotlin.test)
             implementation(libs.kotlinx.coroutinesTest)
             implementation(libs.turbine)
-        }
-        jsMain.dependencies {
-            implementation(libs.wrappers.browser)
         }
         getByName("androidDeviceTest").dependencies {
             implementation(libs.androidx.testRunner)
