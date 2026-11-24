@@ -1,0 +1,27 @@
+<resources>
+    <!-- Expense list screen -->
+    <string name="app_bar_expenses">Expenses</string>
+    <string name="summary_total">Total: %1$s</string>
+    <string name="summary_budget_left">Budget left: %1$s</string>
+    <string name="value_none">—</string>
+
+    <!-- Add-expense dialog -->
+    <string name="add_expense_title">Add expense</string>
+    <string name="field_amount">Amount</string>
+    <string name="field_date">Date (YYYY-MM-DD)</string>
+    <string name="field_note">Note (optional)</string>
+    <string name="action_save">Save</string>
+    <string name="action_cancel">Cancel</string>
+
+    <!-- Form (input) errors -->
+    <string name="error_enter_valid_amount">Enter a valid amount</string>
+    <string name="error_pick_category">Pick a category</string>
+    <string name="error_enter_valid_date">Enter a valid date (YYYY-MM-DD)</string>
+
+    <!-- Domain validation errors -->
+    <string name="error_amount_not_positive">Amount must be greater than zero</string>
+    <string name="error_end_date_before_start">End date cannot be before start date</string>
+    <string name="error_currency_mismatch">Currency must match the trip (%1$s)</string>
+    <string name="error_date_outside_trip">Date must be between %1$s and %2$s</string>
+    <string name="error_invalid_expense">Invalid expense</string>
+</resources>

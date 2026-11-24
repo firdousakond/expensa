@@ -1,0 +1,27 @@
+<resources>
+    <!-- Expense list screen -->
+    <string name="app_bar_expenses">Ausgaben</string>
+    <string name="summary_total">Gesamt: %1$s</string>
+    <string name="summary_budget_left">Restbudget: %1$s</string>
+    <string name="value_none">—</string>
+
+    <!-- Add-expense dialog -->
+    <string name="add_expense_title">Ausgabe hinzufügen</string>
+    <string name="field_amount">Betrag</string>
+    <string name="field_date">Datum (JJJJ-MM-TT)</string>
+    <string name="field_note">Notiz (optional)</string>
+    <string name="action_save">Speichern</string>
+    <string name="action_cancel">Abbrechen</string>
+
+    <!-- Form (input) errors -->
+    <string name="error_enter_valid_amount">Gültigen Betrag eingeben</string>
+    <string name="error_pick_category">Kategorie auswählen</string>
+    <string name="error_enter_valid_date">Gültiges Datum eingeben (JJJJ-MM-TT)</string>
+
+    <!-- Domain validation errors -->
+    <string name="error_amount_not_positive">Betrag muss größer als null sein</string>
+    <string name="error_end_date_before_start">Enddatum darf nicht vor dem Startdatum liegen</string>
+    <string name="error_currency_mismatch">Währung muss zur Reise passen (%1$s)</string>
+    <string name="error_date_outside_trip">Datum muss zwischen %1$s und %2$s liegen</string>
+    <string name="error_invalid_expense">Ungültige Ausgabe</string>
+</resources>
