@@ -22,6 +22,10 @@ sqldelight {
 }
 
 kotlin {
+    compilerOptions {
+        // DriverFactory uses an expect/actual class (stable in practice, Beta-flagged).
+        freeCompilerArgs.add("-Xexpect-actual-classes")
+    }
     listOf(
         iosArm64(),
         iosSimulatorArm64(),
