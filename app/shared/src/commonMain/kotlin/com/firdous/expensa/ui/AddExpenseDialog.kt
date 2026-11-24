@@ -26,10 +26,20 @@ import com.firdous.expensa.presentation.ExpenseListViewModel
 import com.firdous.expensa.presentation.parseAmountToMinor
 import com.firdous.expensa.validation.ValidationResult
 import expensa.app.shared.generated.resources.Res
+import expensa.app.shared.generated.resources.action_cancel
+import expensa.app.shared.generated.resources.action_save
+import expensa.app.shared.generated.resources.add_expense_title
+import expensa.app.shared.generated.resources.error_enter_valid_amount
+import expensa.app.shared.generated.resources.error_enter_valid_date
 import expensa.app.shared.generated.resources.error_invalid_expense
+import expensa.app.shared.generated.resources.error_pick_category
+import expensa.app.shared.generated.resources.field_amount
+import expensa.app.shared.generated.resources.field_date
+import expensa.app.shared.generated.resources.field_note
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import org.jetbrains.compose.resources.getString
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -40,6 +50,11 @@ fun AddExpenseDialog(
 ) {
     val scope = rememberCoroutineScope()
 
+    // Resolved here (composable scope) so they can be used in the non-composable onClick.
+    val invalidAmountMessage = stringResource(Res.string.error_enter_valid_amount)
+    val pickCategoryMessage = stringResource(Res.string.error_pick_category)
+    val invalidDateMessage = stringResource(Res.string.error_enter_valid_date)
+
     var amountText by remember { mutableStateOf("") }
     var selectedCategory by remember { mutableStateOf(categories.firstOrNull()?.id) }
     var dateText by remember { mutableStateOf(viewModel.defaultExpenseDate.toString()) }
@@ -48,13 +63,13 @@ fun AddExpenseDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Add expense") },
+        title = { Text(stringResource(Res.string.add_expense_title)) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 OutlinedTextField(
                     value = amountText,
                     onValueChange = { amountText = it },
-                    label = { Text("Amount") },
+                    label = { Text(stringResource(Res.string.field_amount)) },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                     modifier = Modifier.fillMaxWidth(),
@@ -71,14 +86,14 @@ fun AddExpenseDialog(
                 OutlinedTextField(
                     value = dateText,
                     onValueChange = { dateText = it },
-                    label = { Text("Date (YYYY-MM-DD)") },
+                    label = { Text(stringResource(Res.string.field_date)) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                 )
                 OutlinedTextField(
                     value = note,
                     onValueChange = { note = it },
-                    label = { Text("Note (optional)") },
+                    label = { Text(stringResource(Res.string.field_note)) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                 )
@@ -93,9 +108,9 @@ fun AddExpenseDialog(
                 val category = selectedCategory
                 val date = runCatching { LocalDate.parse(dateText) }.getOrNull()
                 when {
-                    amountMinor == null -> error = "Enter a valid amount"
-                    category == null -> error = "Pick a category"
-                    date == null -> error = "Enter a valid date (YYYY-MM-DD)"
+                    amountMinor == null -> error = invalidAmountMessage
+                    category == null -> error = pickCategoryMessage
+                    date == null -> error = invalidDateMessage
                     else -> {
                         error = null
                         scope.launch {
@@ -109,10 +124,10 @@ fun AddExpenseDialog(
                         }
                     }
                 }
-            }) { Text("Save") }
+            }) { Text(stringResource(Res.string.action_save)) }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) { Text("Cancel") }
+            TextButton(onClick = onDismiss) { Text(stringResource(Res.string.action_cancel)) }
         },
     )
 }

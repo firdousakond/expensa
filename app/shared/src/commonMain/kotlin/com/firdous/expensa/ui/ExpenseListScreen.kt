@@ -26,6 +26,12 @@ import androidx.compose.ui.unit.dp
 import com.firdous.expensa.model.Expense
 import com.firdous.expensa.presentation.ExpenseListUiState
 import com.firdous.expensa.presentation.ExpenseListViewModel
+import expensa.app.shared.generated.resources.Res
+import expensa.app.shared.generated.resources.app_bar_expenses
+import expensa.app.shared.generated.resources.summary_budget_left
+import expensa.app.shared.generated.resources.summary_total
+import expensa.app.shared.generated.resources.value_none
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -42,7 +48,7 @@ fun ExpenseListScreen(viewModel: ExpenseListViewModel) {
     }
 
     Scaffold(
-        topBar = { TopAppBar(title = { Text("Expenses") }) },
+        topBar = { TopAppBar(title = { Text(stringResource(Res.string.app_bar_expenses)) }) },
         floatingActionButton = {
             FloatingActionButton(onClick = { showAddDialog = true }) {
                 Text("+", style = MaterialTheme.typography.headlineMedium)
@@ -67,14 +73,15 @@ fun ExpenseListScreen(viewModel: ExpenseListViewModel) {
 
 @Composable
 private fun SummaryHeader(state: ExpenseListUiState) {
+    val none = stringResource(Res.string.value_none)
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
-            text = "Total: ${state.summary?.total?.format() ?: "—"}",
+            text = stringResource(Res.string.summary_total, state.summary?.total?.format() ?: none),
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold,
         )
         Text(
-            text = "Budget left: ${state.summary?.remaining?.format() ?: "—"}",
+            text = stringResource(Res.string.summary_budget_left, state.summary?.remaining?.format() ?: none),
             style = MaterialTheme.typography.bodyMedium,
         )
     }
