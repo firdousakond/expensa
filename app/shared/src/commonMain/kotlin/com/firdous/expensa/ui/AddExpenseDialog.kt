@@ -20,9 +20,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.firdous.expensa.model.Category
-import com.firdous.expensa.presentation.ExpenseListViewModel
+import com.firdous.expensa.model.CategoryId
 import com.firdous.expensa.presentation.parseAmountToMinor
 import com.firdous.expensa.validation.ValidationResult
 import expensa.app.shared.generated.resources.Res
@@ -41,11 +42,20 @@ import kotlinx.datetime.LocalDate
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 
+/** Submits the assembled form input; returns the domain validation result. */
+typealias SubmitExpense = suspend (
+    amountMinor: Long,
+    categoryId: CategoryId,
+    date: LocalDate,
+    note: String?,
+) -> ValidationResult
+
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun AddExpenseDialog(
-    viewModel: ExpenseListViewModel,
     categories: List<Category>,
+    defaultDate: LocalDate,
+    onSubmit: SubmitExpense,
     onDismiss: () -> Unit,
 ) {
     val scope = rememberCoroutineScope()
@@ -57,7 +67,7 @@ fun AddExpenseDialog(
 
     var amountText by remember { mutableStateOf("") }
     var selectedCategory by remember { mutableStateOf(categories.firstOrNull()?.id) }
-    var dateText by remember { mutableStateOf(viewModel.defaultExpenseDate.toString()) }
+    var dateText by remember { mutableStateOf(defaultDate.toString()) }
     var note by remember { mutableStateOf("") }
     var error by remember { mutableStateOf<String?>(null) }
 
@@ -114,7 +124,7 @@ fun AddExpenseDialog(
                     else -> {
                         error = null
                         scope.launch {
-                            when (val result = viewModel.submitExpense(amountMinor, category, date, note)) {
+                            when (val result = onSubmit(amountMinor, category, date, note)) {
                                 is ValidationResult.Valid -> onDismiss()
                                 is ValidationResult.Invalid ->
                                     error =
@@ -130,4 +140,21 @@ fun AddExpenseDialog(
             TextButton(onClick = onDismiss) { Text(stringResource(Res.string.action_cancel)) }
         },
     )
+}
+
+@Preview
+@Composable
+fun AddExpenseDialogPreview() {
+    MaterialTheme {
+        AddExpenseDialog(
+            categories =
+                listOf(
+                    Category(CategoryId("food"), "Food"),
+                    Category(CategoryId("transport"), "Transport"),
+                ),
+            defaultDate = LocalDate(2026, 1, 1),
+            onSubmit = { _, _, _, _ -> ValidationResult.Valid },
+            onDismiss = {},
+        )
+    }
 }
