@@ -10,6 +10,7 @@ plugins {
     alias(libs.plugins.ktor) apply false
     alias(libs.plugins.ktlint) apply false
     alias(libs.plugins.detekt) apply false
+    alias(libs.plugins.sqldelight) apply false
     // Applied on the root so it can aggregate coverage across modules.
     alias(libs.plugins.kover)
 }

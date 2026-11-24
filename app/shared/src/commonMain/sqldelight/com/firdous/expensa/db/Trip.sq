@@ -1,0 +1,21 @@
+CREATE TABLE trip (
+    id TEXT NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL,
+    startDate TEXT NOT NULL,
+    endDate TEXT NOT NULL,
+    currency TEXT NOT NULL,
+    budgetMinor INTEGER NOT NULL
+);
+
+selectAll:
+SELECT * FROM trip;
+
+selectById:
+SELECT * FROM trip WHERE id = ?;
+
+upsert:
+INSERT OR REPLACE INTO trip(id, name, startDate, endDate, currency, budgetMinor)
+VALUES (?, ?, ?, ?, ?, ?);
+
+deleteById:
+DELETE FROM trip WHERE id = ?;

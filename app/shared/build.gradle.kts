@@ -5,11 +5,20 @@ plugins {
     alias(libs.plugins.androidMultiplatformLibrary)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.sqldelight)
 }
 
 composeCompiler {
     // Treat our immutable domain/UI types as stable so composables can skip.
     stabilityConfigurationFiles.add(rootProject.layout.projectDirectory.file("compose_stability.conf"))
+}
+
+sqldelight {
+    databases {
+        create("ExpensaDatabase") {
+            packageName.set("com.firdous.expensa.db")
+        }
+    }
 }
 
 kotlin {
@@ -52,6 +61,13 @@ kotlin {
         androidMain.dependencies {
             implementation(libs.compose.uiToolingPreview)
             implementation(libs.compose.uiTooling)
+            implementation(libs.sqldelight.driverAndroid)
+        }
+        iosMain.dependencies {
+            implementation(libs.sqldelight.driverNative)
+        }
+        jvmMain.dependencies {
+            implementation(libs.sqldelight.driverSqlite)
         }
         commonMain.dependencies {
             api(project(":core"))
@@ -63,6 +79,8 @@ kotlin {
             implementation(libs.compose.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
+            implementation(libs.sqldelight.runtime)
+            implementation(libs.sqldelight.coroutines)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
