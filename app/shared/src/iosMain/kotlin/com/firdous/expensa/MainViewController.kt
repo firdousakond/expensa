@@ -2,10 +2,14 @@ package com.firdous.expensa
 
 import androidx.compose.ui.window.ComposeUIViewController
 import com.firdous.expensa.di.initKoin
-import org.koin.core.context.GlobalContext
+
+private var koinStarted = false
 
 fun MainViewController() =
     run {
-        if (GlobalContext.getOrNull() == null) initKoin()
+        if (!koinStarted) {
+            initKoin()
+            koinStarted = true
+        }
         ComposeUIViewController { App() }
     }
