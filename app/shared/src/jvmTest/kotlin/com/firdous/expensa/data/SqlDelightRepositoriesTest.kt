@@ -98,6 +98,24 @@ class SqlDelightRepositoriesTest {
             assertEquals(category, repo.getCategory(CategoryId("food")))
         }
 
+    @Test
+    fun `categories are observed and deletable`() =
+        runTest {
+            val repo = SqlDelightCategoryRepository(db(), UnconfinedTestDispatcher(testScheduler))
+            val food = Category(CategoryId("food"), "Food", isBuiltIn = true)
+            val transport = Category(CategoryId("transport"), "Transport")
+            repo.upsert(food)
+            repo.upsert(transport)
+
+            repo.observeCategories().test {
+                assertEquals(listOf(food, transport), awaitItem())
+                cancelAndIgnoreRemainingEvents()
+            }
+
+            repo.delete(CategoryId("food"))
+            assertNull(repo.getCategory(CategoryId("food")))
+        }
+
     private fun trip() =
         Trip(
             id = TripId("berlin"),

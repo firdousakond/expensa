@@ -52,6 +52,8 @@ kover {
                     "com.firdous.expensa.Greeting*",
                     "com.firdous.expensa.Platform*",
                     "com.firdous.expensa.MainViewControllerKt",
+                    // Platform-specific SQLDelight driver wiring (verified by running).
+                    "com.firdous.expensa.data.DriverFactory",
                 )
                 // UI composables and the composition root are verified by running
                 // the app / UI tests, not unit coverage.
