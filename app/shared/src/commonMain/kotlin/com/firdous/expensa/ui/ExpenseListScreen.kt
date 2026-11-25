@@ -1,6 +1,7 @@
 package com.firdous.expensa.ui
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,6 +20,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,12 +32,14 @@ import com.firdous.expensa.model.Currency
 import com.firdous.expensa.model.Expense
 import com.firdous.expensa.model.ExpenseId
 import com.firdous.expensa.model.Money
+import com.firdous.expensa.model.Trip
 import com.firdous.expensa.model.TripId
 import com.firdous.expensa.model.TripSummary
 import com.firdous.expensa.presentation.ExpenseListUiState
 import com.firdous.expensa.presentation.ExpenseListViewModel
 import expensa.app.shared.generated.resources.Res
 import expensa.app.shared.generated.resources.app_bar_expenses
+import expensa.app.shared.generated.resources.empty_no_trip
 import expensa.app.shared.generated.resources.summary_budget_left
 import expensa.app.shared.generated.resources.summary_total
 import expensa.app.shared.generated.resources.value_none
@@ -48,10 +52,11 @@ fun ExpenseListScreen(viewModel: ExpenseListViewModel) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     var showAddDialog by remember { mutableStateOf(false) }
 
-    if (showAddDialog) {
+    val trip = state.trip
+    if (showAddDialog && trip != null) {
         AddExpenseDialog(
             categories = state.categories,
-            defaultDate = viewModel.defaultExpenseDate,
+            defaultDate = trip.startDate,
             onSubmit = viewModel::submitExpense,
             onDismiss = { showAddDialog = false },
         )
@@ -70,24 +75,40 @@ fun ExpenseListContent(
     Scaffold(
         topBar = { TopAppBar(title = { Text(stringResource(Res.string.app_bar_expenses)) }) },
         floatingActionButton = {
-            FloatingActionButton(onClick = onAddClick) {
-                Text("+", style = MaterialTheme.typography.headlineMedium)
+            if (state.trip != null) {
+                FloatingActionButton(onClick = onAddClick) {
+                    Text("+", style = MaterialTheme.typography.headlineMedium)
+                }
             }
         },
     ) { padding ->
-        Column(
-            modifier =
-                Modifier
-                    .fillMaxSize()
-                    .padding(padding)
-                    .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-        ) {
-            SummaryHeader(state.summary)
-            LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                items(state.expenses, key = { it.id.value }) { expense -> ExpenseRow(expense) }
+        if (state.trip == null) {
+            EmptyState(Modifier.fillMaxSize().padding(padding))
+        } else {
+            Column(
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .padding(padding)
+                        .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                SummaryHeader(state.summary)
+                LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    items(state.expenses, key = { it.id.value }) { expense -> ExpenseRow(expense) }
+                }
             }
         }
+    }
+}
+
+@Composable
+private fun EmptyState(modifier: Modifier = Modifier) {
+    Box(modifier = modifier, contentAlignment = Alignment.Center) {
+        Text(
+            text = stringResource(Res.string.empty_no_trip),
+            style = MaterialTheme.typography.titleMedium,
+        )
     }
 }
 
@@ -133,6 +154,7 @@ fun ExpenseListContentPreview() {
         ExpenseListContent(
             state =
                 ExpenseListUiState(
+                    trip = previewTrip(eur),
                     expenses = expenses,
                     summary =
                         TripSummary(
@@ -150,23 +172,20 @@ fun ExpenseListContentPreview() {
 @Preview
 @Composable
 fun ExpenseListContentEmptyPreview() {
-    val eur = Currency("EUR")
     MaterialTheme {
-        ExpenseListContent(
-            state =
-                ExpenseListUiState(
-                    expenses = emptyList(),
-                    summary =
-                        TripSummary(
-                            total = Money(0, eur),
-                            perCategory = emptyMap(),
-                            remaining = Money(50000, eur),
-                        ),
-                ),
-            onAddClick = {},
-        )
+        ExpenseListContent(state = ExpenseListUiState(trip = null), onAddClick = {})
     }
 }
+
+private fun previewTrip(eur: Currency) =
+    Trip(
+        id = TripId("berlin"),
+        name = "Berlin",
+        startDate = LocalDate(2026, 1, 1),
+        endDate = LocalDate(2026, 1, 7),
+        currency = eur,
+        budget = Money(50_000, eur),
+    )
 
 private fun previewExpense(
     id: String,

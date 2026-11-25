@@ -4,6 +4,7 @@
     <string name="summary_total">Gesamt: %1$s</string>
     <string name="summary_budget_left">Restbudget: %1$s</string>
     <string name="value_none">—</string>
+    <string name="empty_no_trip">Noch keine Reise</string>
 
     <!-- Add-expense dialog -->
     <string name="add_expense_title">Ausgabe hinzufügen</string>
