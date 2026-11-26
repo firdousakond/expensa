@@ -33,8 +33,6 @@ kotlin {
         iosTarget.binaries.framework {
             baseName = "Shared"
             isStatic = true
-            // SQLDelight's native driver links against the system SQLite.
-            linkerOpts.add("-lsqlite3")
         }
     }
     jvm()
