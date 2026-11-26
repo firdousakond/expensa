@@ -1,13 +1,13 @@
 package com.firdous.expensa.ui
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -38,6 +38,7 @@ import com.firdous.expensa.model.TripSummary
 import com.firdous.expensa.presentation.ExpenseListUiState
 import com.firdous.expensa.presentation.ExpenseListViewModel
 import expensa.app.shared.generated.resources.Res
+import expensa.app.shared.generated.resources.action_create_trip
 import expensa.app.shared.generated.resources.app_bar_expenses
 import expensa.app.shared.generated.resources.empty_no_trip
 import expensa.app.shared.generated.resources.summary_budget_left
@@ -52,6 +53,8 @@ fun ExpenseListScreen(viewModel: ExpenseListViewModel) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     var showAddDialog by remember { mutableStateOf(false) }
 
+    var showCreateTripDialog by remember { mutableStateOf(false) }
+
     val trip = state.trip
     if (showAddDialog && trip != null) {
         AddExpenseDialog(
@@ -61,8 +64,18 @@ fun ExpenseListScreen(viewModel: ExpenseListViewModel) {
             onDismiss = { showAddDialog = false },
         )
     }
+    if (showCreateTripDialog) {
+        CreateTripDialog(
+            onSubmit = viewModel::createTrip,
+            onDismiss = { showCreateTripDialog = false },
+        )
+    }
 
-    ExpenseListContent(state = state, onAddClick = { showAddDialog = true })
+    ExpenseListContent(
+        state = state,
+        onAddClick = { showAddDialog = true },
+        onCreateTripClick = { showCreateTripDialog = true },
+    )
 }
 
 /** Stateless, previewable content. */
@@ -71,6 +84,7 @@ fun ExpenseListScreen(viewModel: ExpenseListViewModel) {
 fun ExpenseListContent(
     state: ExpenseListUiState,
     onAddClick: () -> Unit,
+    onCreateTripClick: () -> Unit,
 ) {
     Scaffold(
         topBar = { TopAppBar(title = { Text(stringResource(Res.string.app_bar_expenses)) }) },
@@ -83,7 +97,10 @@ fun ExpenseListContent(
         },
     ) { padding ->
         if (state.trip == null) {
-            EmptyState(Modifier.fillMaxSize().padding(padding))
+            EmptyState(
+                onCreateTripClick = onCreateTripClick,
+                modifier = Modifier.fillMaxSize().padding(padding),
+            )
         } else {
             Column(
                 modifier =
@@ -103,12 +120,22 @@ fun ExpenseListContent(
 }
 
 @Composable
-private fun EmptyState(modifier: Modifier = Modifier) {
-    Box(modifier = modifier, contentAlignment = Alignment.Center) {
+private fun EmptyState(
+    onCreateTripClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterVertically),
+    ) {
         Text(
             text = stringResource(Res.string.empty_no_trip),
             style = MaterialTheme.typography.titleMedium,
         )
+        Button(onClick = onCreateTripClick) {
+            Text(stringResource(Res.string.action_create_trip))
+        }
     }
 }
 
@@ -165,6 +192,7 @@ fun ExpenseListContentPreview() {
                     categories = listOf(Category(CategoryId("food"), "Food")),
                 ),
             onAddClick = {},
+            onCreateTripClick = {},
         )
     }
 }
@@ -173,7 +201,11 @@ fun ExpenseListContentPreview() {
 @Composable
 fun ExpenseListContentEmptyPreview() {
     MaterialTheme {
-        ExpenseListContent(state = ExpenseListUiState(trip = null), onAddClick = {})
+        ExpenseListContent(
+            state = ExpenseListUiState(trip = null),
+            onAddClick = {},
+            onCreateTripClick = {},
+        )
     }
 }
 
