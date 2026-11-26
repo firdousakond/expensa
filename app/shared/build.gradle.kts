@@ -1,4 +1,3 @@
-import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -6,6 +5,7 @@ plugins {
     alias(libs.plugins.androidMultiplatformLibrary)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.sqldelight)
 }
 
 composeCompiler {
@@ -13,7 +13,19 @@ composeCompiler {
     stabilityConfigurationFiles.add(rootProject.layout.projectDirectory.file("compose_stability.conf"))
 }
 
+sqldelight {
+    databases {
+        create("ExpensaDatabase") {
+            packageName.set("com.firdous.expensa.db")
+        }
+    }
+}
+
 kotlin {
+    compilerOptions {
+        // DriverFactory uses an expect/actual class (stable in practice, Beta-flagged).
+        freeCompilerArgs.add("-Xexpect-actual-classes")
+    }
     listOf(
         iosArm64(),
         iosSimulatorArm64(),
@@ -24,15 +36,6 @@ kotlin {
         }
     }
     jvm()
-    js {
-        browser()
-        binaries.executable()
-    }
-    @OptIn(ExperimentalWasmDsl::class)
-    wasmJs {
-        browser()
-        binaries.executable()
-    }
     android {
         namespace = "com.firdous.expensa.app.shared"
         compileSdk =
@@ -62,6 +65,14 @@ kotlin {
         androidMain.dependencies {
             implementation(libs.compose.uiToolingPreview)
             implementation(libs.compose.uiTooling)
+            implementation(libs.sqldelight.driverAndroid)
+            implementation(libs.koin.android)
+        }
+        iosMain.dependencies {
+            implementation(libs.sqldelight.driverNative)
+        }
+        jvmMain.dependencies {
+            implementation(libs.sqldelight.driverSqlite)
         }
         commonMain.dependencies {
             api(project(":core"))
@@ -73,14 +84,16 @@ kotlin {
             implementation(libs.compose.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
+            implementation(libs.sqldelight.runtime)
+            implementation(libs.sqldelight.coroutines)
+            implementation(libs.koin.core)
+            implementation(libs.koin.compose)
+            implementation(libs.koin.composeViewmodel)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
             implementation(libs.kotlinx.coroutinesTest)
             implementation(libs.turbine)
-        }
-        jsMain.dependencies {
-            implementation(libs.wrappers.browser)
         }
         getByName("androidDeviceTest").dependencies {
             implementation(libs.androidx.testRunner)

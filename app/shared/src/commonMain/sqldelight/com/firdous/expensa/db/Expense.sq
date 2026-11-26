@@ -1,0 +1,24 @@
+CREATE TABLE expense (
+    id TEXT NOT NULL PRIMARY KEY,
+    tripId TEXT NOT NULL,
+    amountMinor INTEGER NOT NULL,
+    currency TEXT NOT NULL,
+    categoryId TEXT NOT NULL,
+    date TEXT NOT NULL,
+    note TEXT
+);
+
+CREATE INDEX expense_tripId ON expense(tripId);
+
+selectByTrip:
+SELECT * FROM expense WHERE tripId = ?;
+
+selectById:
+SELECT * FROM expense WHERE id = ?;
+
+upsert:
+INSERT OR REPLACE INTO expense(id, tripId, amountMinor, currency, categoryId, date, note)
+VALUES (?, ?, ?, ?, ?, ?, ?);
+
+deleteById:
+DELETE FROM expense WHERE id = ?;

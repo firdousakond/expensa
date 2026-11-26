@@ -52,10 +52,10 @@ class ExpenseListViewModelTest {
 
             val vm =
                 ExpenseListViewModel(
-                    trip = trip,
                     observeTripDetail = ObserveTripDetail(trips, expenses),
                     observeCategories = ObserveCategories(InMemoryCategoryRepository()),
                     addExpense = AddExpense(expenses),
+                    trips = trips,
                 )
 
             vm.uiState.test {
@@ -75,10 +75,10 @@ class ExpenseListViewModelTest {
 
             val vm =
                 ExpenseListViewModel(
-                    trip = trip,
                     observeTripDetail = ObserveTripDetail(trips, expenses),
                     observeCategories = ObserveCategories(InMemoryCategoryRepository()),
                     addExpense = AddExpense(expenses),
+                    trips = trips,
                 )
 
             vm.uiState.test {
@@ -111,10 +111,10 @@ class ExpenseListViewModelTest {
 
             val vm =
                 ExpenseListViewModel(
-                    trip = trip,
                     observeTripDetail = ObserveTripDetail(trips, expenses),
                     observeCategories = ObserveCategories(InMemoryCategoryRepository()),
                     addExpense = AddExpense(expenses),
+                    trips = trips,
                 )
 
             vm.uiState.test {

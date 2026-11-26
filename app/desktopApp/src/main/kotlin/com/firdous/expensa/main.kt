@@ -2,8 +2,10 @@ package com.firdous.expensa
 
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
+import com.firdous.expensa.di.initKoin
 
-fun main() =
+fun main() {
+    initKoin()
     application {
         Window(
             onCloseRequest = ::exitApplication,
@@ -12,3 +14,4 @@ fun main() =
             App()
         }
     }
+}
