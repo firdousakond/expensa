@@ -1,4 +1,4 @@
-package com.firdous.expensa.ui
+package com.firdous.expensa.presentation.widget
 
 import com.firdous.expensa.validation.ValidationError
 import expensa.app.shared.generated.resources.Res

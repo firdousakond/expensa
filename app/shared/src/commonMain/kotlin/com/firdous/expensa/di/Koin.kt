@@ -9,6 +9,8 @@ import com.firdous.expensa.repository.CategoryRepository
 import com.firdous.expensa.repository.ExpenseRepository
 import com.firdous.expensa.repository.TripRepository
 import com.firdous.expensa.usecase.AddExpense
+import com.firdous.expensa.usecase.AddTrip
+import com.firdous.expensa.usecase.EnsureDefaultCategories
 import com.firdous.expensa.usecase.ObserveCategories
 import com.firdous.expensa.usecase.ObserveTripDetail
 import kotlinx.coroutines.CoroutineDispatcher
@@ -32,6 +34,8 @@ val appModule =
         factory { ObserveTripDetail(get(), get()) }
         factory { ObserveCategories(get()) }
         factory { AddExpense(get()) }
+        factory { AddTrip(get()) }
+        factory { EnsureDefaultCategories(get()) }
         viewModelOf(::ExpenseListViewModel)
     }
 

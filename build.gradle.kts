@@ -59,7 +59,7 @@ kover {
                 // the app / UI tests, not unit coverage.
                 packages(
                     "expensa.app.shared.generated.resources",
-                    "com.firdous.expensa.ui",
+                    "com.firdous.expensa.presentation.widget",
                     "com.firdous.expensa.di",
                 )
             }

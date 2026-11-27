@@ -5,6 +5,19 @@
     <string name="summary_budget_left">Restbudget: %1$s</string>
     <string name="value_none">—</string>
     <string name="empty_no_trip">Noch keine Reise</string>
+    <string name="action_create_trip">Reise erstellen</string>
+
+    <!-- Create-trip dialog -->
+    <string name="create_trip_title">Reise erstellen</string>
+    <string name="field_name">Name</string>
+    <string name="field_start_date">Startdatum (JJJJ-MM-TT)</string>
+    <string name="field_end_date">Enddatum (JJJJ-MM-TT)</string>
+    <string name="field_currency">Währung</string>
+    <string name="field_budget">Budget</string>
+    <string name="action_create">Erstellen</string>
+    <string name="error_enter_name">Namen eingeben</string>
+    <string name="error_enter_valid_currency">Währungscode eingeben</string>
+    <string name="error_enter_valid_budget">Gültiges Budget eingeben</string>
 
     <!-- Add-expense dialog -->
     <string name="add_expense_title">Ausgabe hinzufügen</string>

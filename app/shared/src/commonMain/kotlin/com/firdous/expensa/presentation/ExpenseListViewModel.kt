@@ -3,12 +3,16 @@ package com.firdous.expensa.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.firdous.expensa.model.CategoryId
+import com.firdous.expensa.model.Currency
 import com.firdous.expensa.model.Expense
 import com.firdous.expensa.model.ExpenseId
 import com.firdous.expensa.model.Money
 import com.firdous.expensa.model.Trip
+import com.firdous.expensa.model.TripId
 import com.firdous.expensa.repository.TripRepository
 import com.firdous.expensa.usecase.AddExpense
+import com.firdous.expensa.usecase.AddTrip
+import com.firdous.expensa.usecase.EnsureDefaultCategories
 import com.firdous.expensa.usecase.ObserveCategories
 import com.firdous.expensa.usecase.ObserveTripDetail
 import com.firdous.expensa.validation.ValidationResult
@@ -29,6 +33,8 @@ class ExpenseListViewModel(
     observeTripDetail: ObserveTripDetail,
     observeCategories: ObserveCategories,
     private val addExpense: AddExpense,
+    private val addTrip: AddTrip,
+    private val ensureDefaultCategories: EnsureDefaultCategories,
     trips: TripRepository,
 ) : ViewModel() {
     // The trip currently shown — the first trip in storage, or null when none exists.
@@ -58,6 +64,31 @@ class ExpenseListViewModel(
                 started = SharingStarted.WhileSubscribed(5000),
                 initialValue = ExpenseListUiState(),
             )
+
+    @OptIn(ExperimentalUuidApi::class)
+    suspend fun createTrip(
+        name: String,
+        startDate: LocalDate,
+        endDate: LocalDate,
+        currencyCode: String,
+        budgetMinor: Long,
+    ): ValidationResult {
+        val currency = Currency(currencyCode)
+        val trip =
+            Trip(
+                id = TripId(Uuid.random().toString()),
+                name = name,
+                startDate = startDate,
+                endDate = endDate,
+                currency = currency,
+                budget = Money(budgetMinor, currency),
+            )
+        val result = addTrip(trip)
+        if (result is ValidationResult.Valid) {
+            ensureDefaultCategories()
+        }
+        return result
+    }
 
     @OptIn(ExperimentalUuidApi::class)
     suspend fun submitExpense(
