@@ -1,4 +1,4 @@
-package com.firdous.expensa.ui
+package com.firdous.expensa.presentation.widget
 
 import com.firdous.expensa.model.Money
 import kotlin.math.abs

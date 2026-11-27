@@ -1,4 +1,4 @@
-package com.firdous.expensa.ui
+package com.firdous.expensa.presentation.widget
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
